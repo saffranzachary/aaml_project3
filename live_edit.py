@@ -153,15 +153,7 @@ def audio_callback(in_data, frame_count, time_info, status):
 
 	##################
 		if f not in cur_playing:
-			instr1 = 12#108
-			instr2 = 52
-			if f >= 38:
-				player.set_instrument(instr1, 1)
-			# else:
-			# 	player.set_instrument(instr2, 1)
-			# 	player.note_on(f, 127, 1)
-			# 	player.set_instrument(instr1, 1)
-			player.note_on(f, 127, 1)
+			player.note_on(f + 12, 127, 1)
 			cur_playing.append(f)
 
 	for i in cur_playing:
@@ -172,7 +164,7 @@ def audio_callback(in_data, frame_count, time_info, status):
 				break
 		if not_found:
 			cur_playing.remove(i)
-			player.note_off(i)
+			player.note_off(i + 12)
 	##################
 
 	# data = np.clip(data, -32000, 32000).astype(np.int16)
@@ -373,9 +365,9 @@ def updateLeapInfo(controller):
 		ix = 0
 		for finger in hand.fingers:
 			x,y,z = transform_coords(finger.tip_position)
-			cur_params[ix] = y/2
-			cur_params[ix+1] = x/2
-			cur_params[ix+2] = z/2
+			cur_params[ix] = round(y/1, 0)
+			cur_params[ix+1] = round(x/1, 0)
+			cur_params[ix+2] = round(z/1, 0)
 			ix += 3
 			needs_update = True
 
@@ -391,7 +383,7 @@ import pygame.midi
 
 pygame.midi.init()
 player = pygame.midi.Output(0)
-player.set_instrument(9, 1)
+player.set_instrument(28, 1)
 
 if LEAP:
 	leapController = Leap.Controller()
